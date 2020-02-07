@@ -1,0 +1,28 @@
+# Configuration of storages usable for storing FAIR data
+#
+# Each storage should have:
+# name = String for its identification
+# type = (one of: ftp, virtuoso, tripleStoreHTTP)
+# enabled = flag if currently possible to use
+# username & passwork = credentials for the storage (if applicable)
+# host = URI of the storage
+# directory = specification of location in the storage
+# contentTypes (optional) = list of allowed content types
+- name: Local FTP
+  type: ftp
+  enabled: true
+  username: user
+  password: mypass
+  host: ftp_server
+  directory: "/home/user/"
+- name: Local GraphDB
+  type: tripleStoreHTTP
+  enabled: true
+  #username: test
+  #password: pass
+  host: graphdb:7200
+  directory: fair_storage
+  contentTypes:
+    - application/rdf+xml
+    - application/x-turtle
+    - text/turtle

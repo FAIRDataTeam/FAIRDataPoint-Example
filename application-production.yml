@@ -5,6 +5,7 @@ server:
   port: 80
 
 repository:
-  type: 2
-  native:
-    dir: /rdfdata
+  type: 4
+  graphDb:
+    url: http://graphdb:7200
+    repository: fdp

@@ -2,24 +2,50 @@ version: '3'
 services:
 
   server:
-    image: fairdata/fairdatapoint:1.0.0
+    image: fairdata/fairdatapoint:develop
     restart: always
     volumes:
       - ./application-production.yml:/fdp/application-production.yml
-      - ./rdfdata:/rdfdata
 
   client:
-    image: fairdata/fairdatapoint-client:1.0.0
+    image: fairdata/fairdatapoint-client:develop
     ports:
       - 80:80
+      - 3333:3333
     environment:
       - FDP_HOST=server
+  open-refine:
+    image: fairdata/openrefine-metadata-extension:develop
+    network_mode: service:client
+    volumes:
+      - ./open-refine/data:/data:z
+      - ./open-refine/config:/app/webapp/extensions/metadata/module/config:ro
 
   mongo:
     image: mongo:4.0.12
     restart: always
     ports:
       - 27017:27017
-    volumes:
-        - ./mongo/data:/data/db
+    #volumes:
+    #    - ./mongo/data:/data/db
     command: mongod
+
+  graphdb:
+    image: dhlabbasel/graphdb-free
+    restart: always
+    volumes:
+      - ./graphdb:/graphdb/data
+    ports:
+      - 7200:7200
+  
+  ftp_server:
+    image: stilliard/pure-ftpd
+    #ports:
+    #  - 21:21
+    #  - 30000-30009:30000-30009
+    volumes:
+      - ./open-refine/ftp:/home/user/
+    environment:
+      FTP_USER_NAME: user
+      FTP_USER_PASS: mypass
+      FTP_USER_HOME: /home/user
